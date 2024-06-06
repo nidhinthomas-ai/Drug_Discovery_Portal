@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from langchain_openai import OpenAI as LangChainOpenAI
+from langchain_community.llms import OpenAI as LangChainOpenAI
 
 def fetch_protein_info_from_rcsb(pdb_id):
     url = f"https://data.rcsb.org/rest/v1/core/entry/{pdb_id}"
@@ -10,40 +10,13 @@ def fetch_protein_info_from_rcsb(pdb_id):
     else:
         return None
 
-def get_protein_details(protein_name):
-    # Define the UniProt API endpoint for searching
-    search_url = "https://rest.uniprot.org/uniprotkb/search"
-
-    # Define query parameters
-    query_params = {
-        "query": f"{protein_name}",
-        "fields": "accession,id,protein_name,organism_name,length,sequence",
-        "format": "json",
-        "size": 1000
-    }
-
-    # Make the request to UniProt API
-    response = requests.get(search_url, params=query_params)
-
-    # Check if the request was successful
+def fetch_protein_info_from_uniprot_by_name(name):
+    url = f"https://rest.uniprot.org/uniprotkb/search?query={name}&format=json"
+    response = requests.get(url)
     if response.status_code == 200:
-        data = response.json()
-
-        # Check if we have any results
-        if 'results' in data and len(data['results']) > 0:
-            protein_data = data['results'][0]
-
-            # Extract relevant details
-            protein_details = {
-                "accession": protein_data.get('primaryAccession', 'N/A'),
-                "id": protein_data.get('uniProtkbId', 'N/A'),
-                "protein_name": protein_data.get('proteinDescription', {}).get('recommendedName', {}).get('fullName', 'N/A'),
-                "organism_name": protein_data.get('organism', {}).get('scientificName', 'N/A'),
-                "length": protein_data.get('sequence', {}).get('length', 'N/A'),
-                "sequence": protein_data.get('sequence', {}).get('value', 'N/A')
-            }
-
-            return protein_details
+        results = response.json()
+        if results['results']:
+            return results['results'][0]
         else:
             return None
     else:
@@ -75,8 +48,8 @@ def format_protein_info_uniprot(protein_info):
         return "No information found.", None
     
     primary_accession = protein_info.get('primaryAccession', 'N/A')
-    protein_name = protein_info.get('protein_name', 'N/A')
-    organism = protein_info.get('organism_name', 'N/A')
+    protein_name = protein_info.get('proteinDescription', {}).get('recommendedName', {}).get('fullName', {}).get('value', 'N/A')
+    organism = protein_info.get('organism', {}).get('scientificName', 'N/A')
     
     details = f"**Primary Accession:** {primary_accession}\n**Protein Name:** {protein_name}\n**Organism:** {organism}"
     return details, primary_accession
@@ -85,7 +58,7 @@ def protein_chat_page():
     st.title("Welcome to Protein Chatbot!")
 
     openai_api_key = st.secrets["OPENAI_API_KEY"]
-    llm = LangChainOpenAI(api_key=openai_api_key, model='gpt-4o', temperature=0.1, max_tokens=2048)
+    llm = LangChainOpenAI(api_key=openai_api_key, temperature=0.1, max_tokens=2048)
     
     if "openai_model" not in st.session_state:
         st.session_state["openai_model"] = llm
@@ -117,7 +90,7 @@ def protein_chat_page():
             protein_info = fetch_protein_info_from_rcsb(pdb_id)
             response_content, title = format_protein_info(protein_info)
         else:
-            protein_info = get_protein_details(prompt)
+            protein_info = fetch_protein_info_from_uniprot_by_name(prompt)
             if protein_info:
                 response_content, primary_accession = format_protein_info_uniprot(protein_info)
                 pdb_ids = fetch_pdb_ids_from_uniprot(primary_accession)
@@ -141,7 +114,7 @@ def protein_chat_page():
     temperature = st.sidebar.slider("Temperature", min_value=0.0, max_value=1.0, value=st.session_state["temperature"], step=0.1)
     if temperature != st.session_state["temperature"]:
         st.session_state["temperature"] = temperature
-        llm.temperature = temperature
+        llm.temperature = temperature  # Update the temperature in LangChain LLM
 
 if __name__ == "__main__":
     protein_chat_page()
