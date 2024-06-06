@@ -112,16 +112,14 @@ def ligand_viewer_page():
             padding-left: 1rem;
             padding-right: 1rem;
         }
-        /* Hide the close button for the sidebar */
         .css-1lcbmhc {
             display: none;
         }
-        /* Ensure the sidebar remains open */
         .css-1d391kg {
             pointer-events: none;
         }
         </style>
-        </div> <!-- Close the content-container div -->
+        </div>
         """,
         unsafe_allow_html=True
     )

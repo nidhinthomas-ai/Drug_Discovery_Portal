@@ -10,9 +10,6 @@ def prot_viewer_page():
         value="6VN7",
     )
 
-    # Slider for surface transparency
-    # surf_transp = st.sidebar.slider("Surface Transparency", min_value=0.0, max_value=1.0, value=0.0)
-
     st.markdown(
         f"""
         <style>
@@ -45,7 +42,7 @@ def prot_viewer_page():
             with NamedTemporaryFile(delete=False, suffix=".pdb") as temp_file:
                 temp_file.write(pdb_file.getvalue())
                 temp_file_path = temp_file.name
-            st_molstar(temp_file_path, height=600, settings={"backgroundColor": "white", "surfaceTransparency": surf_transp})
+            st_molstar(temp_file_path, height=600)
         elif pdb_code:
             st_molstar_rcsb(pdb_code, height=600)
         else:
@@ -74,16 +71,14 @@ def prot_viewer_page():
             padding-left: 1rem;
             padding-right: 1rem;
         }
-        /* Hide the close button for the sidebar */
         .css-1lcbmhc {
             display: none;
         }
-        /* Ensure the sidebar remains open */
         .css-1d391kg {
             pointer-events: none;
         }
         </style>
-        </div> <!-- Close the content-container div -->
+        </div>
         """,
         unsafe_allow_html=True
     )
