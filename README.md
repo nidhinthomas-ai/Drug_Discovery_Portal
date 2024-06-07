@@ -1,13 +1,13 @@
 
-# Drug Discovery Portal: A Streamlit Web Application for Protein and lignad visualization
+# Drug Discovery Portal: A Streamlit Web Application for Protein and Ligand Visualization
 
 ![Alt text](./assets/home_page.png)
 
 ## Introduction
 
-Drug discovery portal is a collection of web applications that can come handy during computational drug design process. This application is built in Streamlit and anyone can use it to visualize proteins, small molecule ligands and learn more about the protein of choice. Individual tools are developed in modules making it easier for users to run them individually or collectively as a single application. It contains three tools:
+Drug discovery portal is a collection of web applications that can come handy during computational drug design process. This application is built in Streamlit and anyone can use it to chat with GPT-4o model about the protein of their choice, visualize the proteins, and small molecule ligands. Individual tools are developed in modules making it easier for users to run them individually or collectively as a single application. It contains three tools:
 
-**Protein Chat:** Protein chat is a chatbot built using the OpenAI API. This tool provides responses to users' queries regarding their protein of interest and uses the information from UniProt database to do so.
+**Protein Chat:** Protein chat is a chatbot built using the OpenAI API. This tool offers responses to users' queries regarding their protein of interest and uses the information from UniProt database to do so.
 
 **Protein Viewer:** Protein viewer tool is a visualization tool built using streamlit-molstar library. It uses the famous open source molstar library to build a streamlit based web application. Users can input either the PDB ID or upload a PDB to visualize the structures. Within the tool, users are free to modify the representations for better visualization. 
 
@@ -28,7 +28,6 @@ cd Drug_Discovery_Portal-main
 The repository is organized as follows:
 ```bash
 Drug_Discovery_Portal-main/  
-├── main.py
 ├── README.md
 ├── assets/
 │   ├── home_page.png  
