@@ -59,9 +59,9 @@ conda activate drug_discovery
 pip install -r requirements.txt
 ```
 
-### .env file:
+### secrets.toml file:
 
-The .env file contains the API Key:
+The .streamlit/secrets.toml file contains the API Key:
 
 ```bash
 OPENAI_API_KEY="Your_OPENAI_API_KEY"
