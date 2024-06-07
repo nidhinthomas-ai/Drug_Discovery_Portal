@@ -1,2 +1,4 @@
 src/.streamlit
 src/__pycache__
+.DS_Store
+assets/.DS_Store
